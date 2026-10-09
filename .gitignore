@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+build/
+dist/
+
+# Generated experiment artifacts
+logs/
+outputs/
+results/
+wandb/
+*.log
+*.csv
+*.tsv
+*.npy
+*.npz
+*.pt
+*.pth
+*.ckpt
+
+# Local datasets and model weights
+assets/
+data/
+checkpoints/
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,117 @@
+# configs/final_css.yaml
+
+source: /path/to/original_dataset
+target: /path/to/final_css_few_shot_folder
+output_csv: /path/to/final_css_report.csv
+
+# 1-shot / 2-shot / 4-shot 都改這裡
+num_samples: 1
+
+train_subpaths: ["train/good", "train/ok"]
+allowed_exts: [".png", ".jpg", ".jpeg"]
+recursive_images: false
+
+rename_images: false
+clear_target: true
+
+foundad_config: configs/config.yaml
+device: cuda
+batch_size: 8
+
+# RAD-style final-layer CLS token.
+# For DINO get_intermediate_layers(..., n=1) = last layer.
+cls_n_layer: 1
+
+# Same-class Top-K CLS neighbors (K_s in the paper).
+top_k: 10
+
+# Cross-class Top-K CLS neighbors (K_x in the paper).
+cross_topk: 10
+
+highlight_threshold: 250
+
+# Auxiliary candidate diagnostics; these weighted values do not drive the
+# paper's sequential four-criterion selection below.
+score:
+  w_std: 0.50
+  w_mean: 0.20
+  w_blur: 0.15
+  w_highlight: 0.15
+
+# ------------------------------------------------------------
+# Four-stage final support selection
+# ------------------------------------------------------------
+# Stage 1:
+#   Keep top 15 images with highest within-class Top-K similarity std.
+#
+# Stage 2:
+#   From Stage 1, keep top 10 images with highest all-same-class mean similarity.
+#
+# Stage 3:
+#   From Stage 2, keep top 3 images with highest inter-class margin.
+#
+# Stage 4:
+#   From Stage 3, select image with highest top1_gap_score.
+#
+# Available metrics:
+#   std_score
+#   mean_score
+#   blur_score
+#   highlight_score
+#   topk_mean_similarity
+#   top1_similarity
+#   topk_std_similarity
+#   all_mean_similarity
+#   raw_cls_css_score
+#   cls_css_score
+#   cross_topk_mean_similarity
+#   inter_class_margin
+#   inter_class_margin_score
+#   top1_gap
+#   top1_gap_score
+#
+# Orders:
+#   desc = larger is better
+#   asc  = smaller is better
+selection:
+  enabled: true
+  mode: four_stage
+
+  # Stage 1: normalized normal variation
+  stage1_metric: topk_std_similarity
+  stage1_order: desc
+  stage1_topk: 15
+
+  # Stage 2: global same-class representativeness
+  stage2_metric: all_mean_similarity
+  #stage2_metric: inter_class_margin_score
+  stage2_order: desc
+  stage2_topk: 10
+
+  # Stage 3: multi-class separation
+  stage3_metric: inter_class_margin_score
+  stage3_order: desc
+  stage3_topk: 3
+
+  # Stage 4: neighborhood stability
+  stage4_metric: top1_gap_score
+  stage4_order: desc
+
+  # K-shot options:
+  #   metric_order
+  #   greedy_diverse
+  kshot_strategy: greedy_diverse
+
+  # Only used when kshot_strategy = greedy_diverse.
+  kshot_score_weight: 0.50
+  kshot_diversity_weight: 0.50
+
+seed: 42
+user_config: ""
+
+hydra:
+  run:
+    dir: .
+  output_subdir: null
+  job:
+    chdir: false
