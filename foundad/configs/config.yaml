@@ -92,8 +92,8 @@ data:
   use_gray: True
   use_blur: True
 
-# The manuscript's Real-IAD schedule is 8000 epochs. Override for MVTec/VisA
-# using the dataset/shot schedule documented in the repository README.
+# Default training schedule for Real-IAD.
+# Override optimization.epochs for other datasets or settings as needed.
 
 optimization:
   weight_decay: 1e-4
