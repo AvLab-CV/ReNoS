@@ -118,8 +118,8 @@ optimization:
   
 
 testing:
-  # K_a varies by dataset and shot in the paper. These are paper defaults for
-  # MVTec 1-shot, VisA 1-shot, and all Real-IAD shots, respectively.
+  # Default Top-K aggregation settings.
+  # Override these values for dataset- and shot-specific experiments as needed.
   K_top_mvtec: 10
   K_top_visa: 5
   K_top_btad: 1
