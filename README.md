@@ -1,6 +1,6 @@
 # ReNoS
 
-Code for **Reliable Normality Selection for Few-Shot Anomaly Detection**.
+Code for **Reliable Normality Selection and Scoring for Few-Shot Anomaly Detection**.
 
 ## Setup
 
@@ -15,7 +15,7 @@ python -m pip install -e .
 
 The environment installs the PyTorch CUDA 11.8 runtime. Use a compatible NVIDIA driver.
 
-Download the required dataset and encoder weights separately. Edit the dataset and checkpoint paths in `foundad/configs/config.yaml` or pass them as Hydra overrides. Data, pretrained weights, and experiment outputs are not included in this repository.
+Download the required datasets separately and set the dataset paths in `foundad/configs/config.yaml` or pass them as Hydra overrides. FoundAD loads the DINOv3 encoder through `torch.hub`.
 
 ## Select support images (CSS)
 
@@ -33,6 +33,12 @@ python final_css.py \
 For 2-shot, set `num_samples=2 selection.stage1_topk=15 selection.stage2_topk=10 selection.stage3_topk=5`. For 4-shot, use `num_samples=4 selection.stage1_topk=20 selection.stage2_topk=15 selection.stage3_topk=10`.
 
 The selector's `clear_target` option defaults to `true` and clears the target folder before copying selected images.
+
+Return to the repository root before training or evaluation:
+
+```bash
+cd ..
+```
 
 ## Train and evaluate FoundAD
 
